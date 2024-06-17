@@ -23,7 +23,7 @@ end)
 ---@param itemName string
 ---@param cb fun(source: number, ...: any)
 function RegisterUsableItem(itemName, cb)
-  Framework.object.RegisterUsable(itemName, cb)
+  Framework.object.RegisterUsableItem(itemName, cb)
 end
 
 ---@param source number
