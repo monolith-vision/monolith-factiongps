@@ -14,41 +14,37 @@ local trackedUsers = {}
 ---@return boolean
 local function isJobCollaborator(job)
   for k, v in next, Config.WhitelistedJobs do
-    if #Config.WhitelistedJobs[k].collaborators < 1 then
-      return false
-    end
-
-    if table.contains(Config.WhitelistedJobs[k].collaborators, job) then
+    if Config.WhitelistedJobs[k].collaborators
+        and #Config.WhitelistedJobs[k].collaborators > 0
+        and table.contains(Config.WhitelistedJobs[k].collaborators, job)
+    then
       return true
     end
   end
   return false
 end
 
-ESX.RegisterUsableItem(Config.Item, function(source)
-  local source = source
-  local xPlayer = ESX.GetPlayerFromId(source) or {
-    job = { name = "Unknown" },
-    getName = function() return "Unknown Player" end
-  }
-  local isCollab = isJobCollaborator(xPlayer.job.name)
-  local jobName = isCollab and isCollab or xPlayer.job.name
+RegisterUsableItem(Config.Item, function(source)
+  local job = GetPlayerJob(source)
+  local isCollab = isJobCollaborator(job.name)
+  local jobName = isCollab and isCollab or job.name
 
   if isCollab then
     goto continue
   end
 
   if not Config.WhitelistedJobs[jobName] then
-    return TriggerClientEvent("esx:showNotification", source, "You are not allowed to use this item.")
+    return Config.Notify(source, "You are not allowed to use this item.")
   end
 
   ::continue::
 
-  trackers[jobName][source] = trackers[jobName][source] and nil or xPlayer?.getName() or "Unknown Player"
+  trackers[jobName][source] = trackers[jobName][source] and nil or GetCharName(source)
   trackedUsers[source] = trackers[jobName][source] and jobName or nil
-  TriggerClientEvent("esx:showNotification", source,
-    trackers[jobName][source] and "Tracker enabled." or "Tracker disabled.")
-  xPlayer.triggerEvent("tracker:update", trackedUsers[source] and trackers[jobName] or {})
+
+  Config.Notify(source, trackers[jobName][source] and "Tracker enabled." or "Tracker disabled.")
+
+  TriggerClientEvent("tracker:update", source, trackedUsers[source] and trackers[jobName] or {})
 end)
 
 Citizen.CreateThread(function()
@@ -81,9 +77,7 @@ Citizen.CreateThread(function()
   end
 end)
 
-RegisterNetEvent("esx:onPlayerDeath")
-AddEventHandler("esx:onPlayerDeath", function()
-  local source = source
+function OnDeath(source)
   local isTracked = trackedUsers[source]
 
   if not isTracked then
@@ -92,7 +86,7 @@ AddEventHandler("esx:onPlayerDeath", function()
 
   trackers[isTracked][source] = nil
   trackedUsers[source] = nil
-end)
+end
 
 AddEventHandler("playerDropped", function()
   local source = source

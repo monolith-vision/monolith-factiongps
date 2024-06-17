@@ -3,7 +3,6 @@ game "gta5"
 lua54 "yes"
 
 shared_scripts {
-  "@es_extended/imports.lua",
   "lib/*.lua",
   "config.lua"
 }
@@ -14,5 +13,6 @@ client_scripts {
 }
 
 server_scripts {
+  "bridge/server/*.lua",
   "server/main.lua"
 }
