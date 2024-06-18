@@ -1,6 +1,6 @@
-# monolith-tracker
+# monolith-factiongps
 
-monolith-tracker is a item based gps system for your users factions
+monolith-factiongps is a item based gps system for your users factions
 
 If you find this script helpful, consider leaving a star ⭐
 
