@@ -39,7 +39,12 @@ RegisterUsableItem(Config.Item, function(source)
 
   ::continue::
 
-  trackers[jobName][source] = trackers[jobName][source] and nil or GetCharName(source)
+  if trackers[jobName][source] then
+    trackers[jobName][source] = nil
+  else
+    trackers[jobName][source] = GetCharName(source)
+  end
+
   trackedUsers[source] = trackers[jobName][source] and jobName or nil
 
   Config.Notify(source, trackers[jobName][source] and "Tracker enabled." or "Tracker disabled.")
