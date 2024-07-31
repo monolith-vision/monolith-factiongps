@@ -20,6 +20,14 @@ RegisterNetEvent("esx:onPlayerDeath", function()
   OnDeath(source)
 end)
 
+RegisterNetEvent("esx:removeInventoryItem", function(itemType, itemName)
+  local source = source
+  
+    if itemName and itemName == Config.Item then
+      OnRemoveItem(source)
+    end
+end)
+
 ---@param itemName string
 ---@param cb fun(source: number, ...: any)
 function RegisterUsableItem(itemName, cb)

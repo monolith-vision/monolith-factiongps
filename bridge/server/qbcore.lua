@@ -22,6 +22,14 @@ RegisterNetEvent("hospital:server:SetDeathStatus", function(isDead)
   end
 end)
 
+RegisterNetEvent("QBCore:Server:RemoveItem", function(itemName)
+  local source = source
+
+  if itemName and itemName == Config.Item then
+    OnRemoveItem(source)
+  end
+end)
+
 ---@param itemName string
 ---@param cb fun(source: number, ...: any)
 function RegisterUsableItem(itemName, cb)

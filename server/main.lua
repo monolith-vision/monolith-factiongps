@@ -93,6 +93,17 @@ function OnDeath(source)
   trackedUsers[source] = nil
 end
 
+function OnRemoveItem(source)
+  local isTracked = trackedUsers[source]
+
+  if not isTracked then
+    return
+  end
+
+  trackers[isTracked][source] = nil
+  trackedUsers[source] = nil
+end
+
 AddEventHandler("playerDropped", function()
   local source = source
   local isTracked = trackedUsers[source]
